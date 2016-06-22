@@ -1,15 +1,10 @@
 import Html exposing (Html, button, div, text)
 import Html.App as Html
-import Html.Events exposing (onClick)
+import Html.Events exposing (onClick, onMouseEnter, onMouseLeave)
 
 
 
-main =
-  Html.beginnerProgram
-    { model = model
-    , view = view
-    , update = update
-    }
+main = Html.beginnerProgram { model = model, view = view, update = update}
 
 
 
@@ -28,19 +23,14 @@ model =
 -- UPDATE
 
 
-type Msg
-  = Increment
-  | Decrement
+type Msg = Increment | Decrement
 
 
 update : Msg -> Model -> Model
 update msg model =
   case msg of
-    Increment ->
-      model + 1
-
-    Decrement ->
-      model - 1
+    Increment -> model + 1
+    Decrement -> model - 1
 
 
 
@@ -50,7 +40,7 @@ update msg model =
 view : Model -> Html Msg
 view model =
   div []
-    [ button [ onClick Decrement ] [ text "-" ]
+    [ button [ onClick Decrement, onMouseEnter Decrement, onMouseLeave Increment ] [ text "-" ]
     , div [] [ text (toString model) ]
-    , button [ onClick Increment ] [ text "+" ]
+    , button [ onClick Increment, onMouseEnter Increment, onMouseLeave Decrement ] [ text "+" ]
     ]
