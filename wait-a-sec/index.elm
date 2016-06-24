@@ -73,4 +73,7 @@ subscriptions model =
 
 processEchoRequest : String -> Float -> Cmd Msg
 processEchoRequest text waitingTime =
-  Task.perform (\x -> x) (\x -> EchoResponse (String.reverse text)) (Process.sleep waitingTime)
+  Task.perform
+    (\x -> x)
+    (\x -> EchoResponse (String.reverse text))
+    (Process.sleep waitingTime)
