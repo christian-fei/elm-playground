@@ -4,7 +4,9 @@ import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import Task
 import Random
+import String
 import Process
+import Debug
 
 main =
   Html.program
@@ -40,7 +42,7 @@ update msg model =
     HandleEchoRequest waitingTime text ->
       (model, Cmd.none)
     EchoRequest text ->
-      ({model | output = "", waiting = True, waitingTime = 1}, processEchoRequest text 1)
+      ({model | output = "", waiting = True, waitingTime = 666}, processEchoRequest text 666)
     EchoResponse text ->
       ({model | input = "", output = text, waiting = False, waitingTime = 0}, Cmd.none)
 
@@ -54,7 +56,7 @@ view model =
       br [] [],
       button [onClick (EchoRequest model.input)] [text "Echo this"],
       br [] [],
-      span [] [text "Waiting time: TODO"]
+      span [] [text (String.append "Waiting time: " (toString model.waitingTime))]
     ]
 
 
