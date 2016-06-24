@@ -7,6 +7,7 @@ import Random
 import String
 import Process
 
+main : Program Never
 main =
   Html.program
     { init = init
