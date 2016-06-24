@@ -3,6 +3,8 @@ import Html.App as Html
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import Task
+import Random
+import Process
 
 main =
   Html.program
@@ -20,7 +22,8 @@ type alias Model =
   }
 
 type Msg =
-  EchoRequest String | EchoResponse String
+  EchoRequest String | EchoResponse String | HandleEchoRequest Int String | ProcessEchoRequest Int String
+
 
 init : (Model, Cmd Msg)
 init =
@@ -28,13 +31,19 @@ init =
   , Cmd.none
   )
 
+
 update : Msg -> Model -> (Model, Cmd Msg)
 update msg model =
   case msg of
+    ProcessEchoRequest waitingTime text ->
+      (model, Cmd.none)
+    HandleEchoRequest waitingTime text ->
+      (model, Cmd.none)
     EchoRequest text ->
-      ({model | output = "", waiting = True, waitingTime = 666}, Cmd.none)
+      ({model | output = "", waiting = True, waitingTime = 1}, processEchoRequest text 1)
     EchoResponse text ->
       ({model | input = "", output = text, waiting = False, waitingTime = 0}, Cmd.none)
+
 
 view : Model -> Html Msg
 view model =
@@ -43,11 +52,17 @@ view model =
       br [] [],
       span [] [text model.output],
       br [] [],
-      button [] [text "Echo this"],
+      button [onClick (EchoRequest model.input)] [text "Echo this"],
       br [] [],
       span [] [text "Waiting time: TODO"]
     ]
 
+
 subscriptions : Model -> Sub Msg
 subscriptions model =
   Sub.none
+
+
+processEchoRequest : String -> Float -> Cmd Msg
+processEchoRequest text waitingTime =
+  Task.perform (\x -> x) (\x -> EchoResponse text) (Process.sleep waitingTime)
