@@ -6,7 +6,6 @@ import Task
 import Random
 import String
 import Process
-import Debug
 
 main =
   Html.program
@@ -26,8 +25,6 @@ type alias Model =
 type Msg =
   EchoRequest String
   | EchoResponse String
-  | HandleEchoRequest Float String
-  | ProcessEchoRequest Float String
   | InputChanged String
   | RandomWaitingTime Float
 
@@ -44,12 +41,8 @@ update msg model =
   case msg of
     InputChanged text ->
       ({model | input = text}, Cmd.none)
-    ProcessEchoRequest waitingTime text ->
-      (model, Cmd.none)
-    HandleEchoRequest waitingTime text ->
-      (model, Cmd.none)
-    RandomWaitingTime mills ->
-      ({model | waitingTime = mills}, processEchoRequest model.input mills)
+    RandomWaitingTime millis ->
+      ({model | waitingTime = millis}, processEchoRequest model.input millis)
     EchoRequest text ->
       let
         waitingTime = (Random.generate RandomWaitingTime (Random.float 1 1000))
@@ -62,13 +55,13 @@ update msg model =
 view : Model -> Html Msg
 view model =
   div []
-    [ input [value model.input, onInput InputChanged] [],
-      br [] [],
-      span [] [text model.output],
-      br [] [],
-      button [onClick (EchoRequest model.input)] [text "Echo this"],
-      br [] [],
-      span [] [text (String.append "Waiting time: " (toString model.waitingTime))]
+    [ input [value model.input, onInput InputChanged] []
+      , br [] []
+      , span [] [text model.output]
+      , br [] []
+      , button [onClick (EchoRequest model.input)] [text "Echo this"]
+      , br [] []
+      , span [] [text (String.append "Waiting time: " (toString model.waitingTime))]
     ]
 
 
