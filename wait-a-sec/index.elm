@@ -46,7 +46,7 @@ update msg model =
       ({model | waitingTime = millis}, processEchoRequest model.input millis)
     EchoRequest text ->
       let
-        waitingTime = (Random.generate RandomWaitingTime (Random.float 1 1000))
+        waitingTime = (Random.generate RandomWaitingTime (Random.float 1 5000))
       in
         (model, waitingTime)
     EchoResponse text ->
@@ -62,7 +62,7 @@ view model =
       , br [] []
       , button [onClick (EchoRequest model.input)] [text "Echo this"]
       , br [] []
-      , span [] [text (String.append "Waiting time: " (toString model.waitingTime))]
+      , span [] [text (String.append "Waiting time: " (toString (round model.waitingTime)))]
     ]
 
 
