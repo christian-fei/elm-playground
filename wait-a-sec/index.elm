@@ -20,11 +20,16 @@ type alias Model =
   { input: String
   , output: String
   , waiting: Bool
-  , waitingTime: Int
+  , waitingTime: Float
   }
 
 type Msg =
-  EchoRequest String | EchoResponse String | HandleEchoRequest Int String | ProcessEchoRequest Int String
+  EchoRequest String
+  | EchoResponse String
+  | HandleEchoRequest Float String
+  | ProcessEchoRequest Float String
+  | InputChanged String
+  | RandomWaitingTime Float
 
 
 init : (Model, Cmd Msg)
@@ -37,20 +42,27 @@ init =
 update : Msg -> Model -> (Model, Cmd Msg)
 update msg model =
   case msg of
+    InputChanged text ->
+      ({model | input = text}, Cmd.none)
     ProcessEchoRequest waitingTime text ->
       (model, Cmd.none)
     HandleEchoRequest waitingTime text ->
       (model, Cmd.none)
+    RandomWaitingTime mills ->
+      ({model | waitingTime = mills}, processEchoRequest model.input mills)
     EchoRequest text ->
-      ({model | output = "", waiting = True, waitingTime = 666}, processEchoRequest text 666)
+      let
+        waitingTime = (Random.generate RandomWaitingTime (Random.float 1 1000))
+      in
+        (model, waitingTime)
     EchoResponse text ->
-      ({model | input = "", output = text, waiting = False, waitingTime = 0}, Cmd.none)
+      ({model | output = text, waiting = False, waitingTime = 0}, Cmd.none)
 
 
 view : Model -> Html Msg
 view model =
   div []
-    [ input [type' "text", value model.input] [],
+    [ input [value model.input, onInput InputChanged] [],
       br [] [],
       span [] [text model.output],
       br [] [],
@@ -67,4 +79,4 @@ subscriptions model =
 
 processEchoRequest : String -> Float -> Cmd Msg
 processEchoRequest text waitingTime =
-  Task.perform (\x -> x) (\x -> EchoResponse text) (Process.sleep waitingTime)
+  Task.perform (\x -> x) (\x -> EchoResponse (String.reverse text)) (Process.sleep waitingTime)
