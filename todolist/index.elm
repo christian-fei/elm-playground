@@ -15,10 +15,8 @@ type alias Todo =
   { text :  String
   }
 
-type alias TodoList = List Todo
-
 type alias Model =
-  { todos : TodoList
+  { todos : List Todo
   }
 
 type Msg =
