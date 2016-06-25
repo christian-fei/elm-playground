@@ -1,6 +1,6 @@
 module TodoUtils exposing (addTodo)
 import Todo exposing (..)
 
-addTodo : String -> List Todo -> List Todo
-addTodo text todos =
-  todos ++ [{text = text}]
+addTodo : Todo -> List Todo -> List Todo
+addTodo todo todos =
+  todos ++ [todo]

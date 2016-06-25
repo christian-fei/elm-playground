@@ -1,6 +1,7 @@
 import Html exposing (..)
 import Html.App as Html
 import Html.Events exposing (..)
+import Html.Attributes exposing (..)
 import List
 import Todo exposing (..)
 import TodoUtils exposing (..)
@@ -25,7 +26,7 @@ type Msg =
 
 init : (Model, Cmd Msg)
 init =
-  (Model [] "", Cmd.none)
+  (Model [{text = "ciao", completed = False}] "", Cmd.none)
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
@@ -37,12 +38,17 @@ update msg model =
     TodoInputChanged text ->
       ({model | todoInput = text}, Cmd.none)
     AddTodo text ->
-      ({model | todos = (addTodo text model.todos)}, Cmd.none)
+      ({model | todos = (addTodo {text = text, completed = False} model.todos)}, Cmd.none)
 
 view : Model -> Html Msg
 view model =
   main' []
     [ h1 [] [text "Todolist"]
-    , ul [] (List.map (\t -> (li [] [text t.text])) model.todos)
+    , ul [] (
+      List.map (\t -> (li []
+        [ span [] [text t.text]
+        , input [type' "checkbox", checked t.completed] []
+        ])) model.todos
+      )
     , input [onInput TodoInputChanged] []
     , button [onClick (AddTodo model.todoInput)] [text "Add todo"]]

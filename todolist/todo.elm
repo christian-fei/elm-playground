@@ -1,4 +1,6 @@
 module Todo exposing (Todo)
 
 type alias Todo =
-  {text : String}
+  { text : String
+  , completed : Bool
+  }
