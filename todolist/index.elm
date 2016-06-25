@@ -12,7 +12,8 @@ main =
   }
 
 type alias Todo =
-  String
+  { text :  String
+  }
 
 type alias TodoList = List Todo
 
@@ -24,7 +25,7 @@ type Msg =
   AddTodo String
 
 init : (Model, Cmd Msg)
-init = (Model ["hey", "wassup"], Cmd.none)
+init = (Model [], Cmd.none)
 subscriptions : Model -> Sub Msg
 subscriptions model =
   Sub.none
@@ -35,5 +36,5 @@ view model =
   main' []
     (List.concat
       [[(h1 [] [text "Todolist"])]
-      , (List.map (\x -> (div [] [text x])) model.todos)]
+      , (List.map (\x -> (div [] [text x.text])) model.todos)]
     )
