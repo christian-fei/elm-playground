@@ -41,6 +41,6 @@ view : Model -> Html Msg
 view model =
   main' []
     [ h1 [] [text "Todolist"]
-    , ul [] (List.map (\x -> (li [] [text x.text])) model.todos)
+    , ul [] (List.map (\t -> (li [] [text t.text])) model.todos)
     , input [onInput TodoInputChanged] []
     , button [onClick (AddTodo model.todoInput)] [text "Add todo"]]
