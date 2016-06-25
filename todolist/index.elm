@@ -21,8 +21,10 @@ type alias Model =
   }
 
 type Msg =
-  AddTodo Todo
+  Noop
+  | AddTodo Todo
   | TodoInputChanged String
+  | TodoCompleted Todo Bool
 
 init : (Model, Cmd Msg)
 init =
@@ -39,6 +41,8 @@ update msg model =
       ({model | todoInput = text}, Cmd.none)
     AddTodo todo ->
       ({model | todos = (addTodo todo model.todos)}, Cmd.none)
+    _ ->
+      (model, Cmd.none)
 
 view : Model -> Html Msg
 view model =
@@ -46,9 +50,9 @@ view model =
     [ h1 [] [text "Todolist"]
     , ul [] (
       List.map (\t -> (li []
-        [ span [] [text t.text]
-        , input [type' "checkbox", checked t.completed] []
+        [ input [type' "checkbox", checked t.completed, onCheck (TodoCompleted t)] []
+        , span [] [text t.text]
         ])) model.todos
       )
     , input [onInput TodoInputChanged] []
-    , button [onClick (AddTodo {text = model.todoInput, completed = False})] [text "Add todo"]]
+    , button [disabled (alreadyPresentTodo model.todoInput model.todos), onClick (AddTodo {text = model.todoInput, completed = False})] [text "Add todo"]]
