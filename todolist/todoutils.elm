@@ -8,8 +8,4 @@ addTodo todo todos =
 
 alreadyPresentTodo : String -> List Todo -> Bool
 alreadyPresentTodo text todos =
-  List.member text (List.map toTodoText todos)
-
-toTodoText : Todo -> String
-toTodoText todo =
-  todo.text
+  List.member text (List.map .text todos)
