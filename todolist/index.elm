@@ -3,6 +3,7 @@ import Html.App as Html
 import Html.Events exposing (..)
 import List
 import Todo exposing (..)
+import TodoUtils exposing (..)
 
 main : Program Never
 main =
@@ -23,7 +24,8 @@ type Msg =
   | TodoInputChanged String
 
 init : (Model, Cmd Msg)
-init = (Model [] "", Cmd.none)
+init =
+  (Model [] "", Cmd.none)
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
