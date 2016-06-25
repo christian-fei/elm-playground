@@ -21,7 +21,7 @@ type alias Model =
   }
 
 type Msg =
-  AddTodo String
+  AddTodo Todo
   | TodoInputChanged String
 
 init : (Model, Cmd Msg)
@@ -37,8 +37,8 @@ update msg model =
   case msg of
     TodoInputChanged text ->
       ({model | todoInput = text}, Cmd.none)
-    AddTodo text ->
-      ({model | todos = (addTodo {text = text, completed = False} model.todos)}, Cmd.none)
+    AddTodo todo ->
+      ({model | todos = (addTodo todo model.todos)}, Cmd.none)
 
 view : Model -> Html Msg
 view model =
@@ -51,4 +51,4 @@ view model =
         ])) model.todos
       )
     , input [onInput TodoInputChanged] []
-    , button [onClick (AddTodo model.todoInput)] [text "Add todo"]]
+    , button [onClick (AddTodo {text = model.todoInput, completed = False})] [text "Add todo"]]
