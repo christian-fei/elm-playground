@@ -25,6 +25,7 @@ type Msg =
   | AddTodo Todo
   | TodoInputChanged String
   | TodoCompleted Todo Bool
+  | TodoMsg Todo.Msg
 
 init : (Model, Cmd Msg)
 init =
@@ -41,6 +42,8 @@ update msg model =
       ({model | todoInput = text}, Cmd.none)
     AddTodo todo ->
       ({model | todos = (addTodo todo model.todos)}, Cmd.none)
+    TodoCompleted todo completed ->
+      (model, Cmd.none)
     _ ->
       (model, Cmd.none)
 
@@ -49,10 +52,14 @@ view model =
   main' []
     [ h1 [] [text "Todolist"]
     , ul [] (
-      List.map (\t -> (li []
-        [ input [type' "checkbox", checked t.completed, onCheck (TodoCompleted t)] []
-        , span [] [text t.text]
-        ])) model.todos
-      )
+      List.map renderTodo model.todos)
     , input [onInput TodoInputChanged] []
-    , button [disabled (alreadyPresentTodo model.todoInput model.todos), onClick (AddTodo {text = model.todoInput, completed = False})] [text "Add todo"]]
+    , button [disabled (alreadyPresentTodo model.todoInput model.todos), onClick (newTodoFrom model.todoInput)] [text "Add todo"]]
+
+newTodoFrom : String -> Msg
+newTodoFrom text =
+  AddTodo {text = text, completed = False}
+
+renderTodo : Todo -> Html Msg
+renderTodo todo =
+  Html.map TodoMsg (Todo.view todo)
