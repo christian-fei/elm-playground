@@ -16,15 +16,15 @@ main =
   }
 
 type alias Model =
-  { todos : List Todo
+  { todos : List Todo.Model
   , todoInput : String
   }
 
 type Msg =
   Noop
-  | AddTodo Todo
+  | AddTodo Todo.Model
   | TodoInputChanged String
-  | TodoCompleted Todo Bool
+  | TodoCompleted Todo.Model Bool
   | TodoMsg Todo.Msg
 
 init : (Model, Cmd Msg)
@@ -51,8 +51,7 @@ view : Model -> Html Msg
 view model =
   main' []
     [ h1 [] [text "Todolist"]
-    , ul [] (
-      List.map renderTodo model.todos)
+    , ul [] (List.map renderTodo model.todos)
     , input [onInput TodoInputChanged] []
     , button [disabled (alreadyPresentTodo model.todoInput model.todos), onClick (newTodoFrom model.todoInput)] [text "Add todo"]]
 
@@ -60,6 +59,10 @@ newTodoFrom : String -> Msg
 newTodoFrom text =
   AddTodo {text = text, completed = False}
 
-renderTodo : Todo -> Html Msg
+renderTodo : Todo.Model -> Html Msg
 renderTodo todo =
-  Html.map TodoMsg (Todo.view todo)
+  li []
+    [ input [type' "checkbox", checked todo.completed, onCheck (TodoCompleted todo)] []
+    , span [] [text todo.text]
+    , span [] [text (if todo.completed then "✓" else "✖️")]
+    ]
