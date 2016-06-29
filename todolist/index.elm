@@ -1,14 +1,15 @@
 import Html exposing (..)
-import Html.App as Html
+import Html.App as App
 import Html.Events exposing (..)
 import Html.Attributes exposing (..)
 import List
 import Todo exposing (..)
 import TodoUtils exposing (..)
+import Json.Encode exposing (encode)
 
 main : Program Never
 main =
-  Html.program
+  App.program
   { init = init
   , subscriptions = subscriptions
   , update = update
@@ -44,8 +45,19 @@ update msg model =
       ({model | todos = (addTodo todo model.todos)}, Cmd.none)
     TodoCompleted todo completed ->
       (model, Cmd.none)
-    _ ->
-      (model, Cmd.none)
+    --TodoMsg subMsg ->
+    --  let
+    --    (updatedWidgetModel, widgetCmd) =
+    --      Todo.update subMsg model.todos
+    --  in
+    --    (model, Cmd.none)
+    --    --({ model | widgetModel = updatedWidgetModel }, Cmd.map TodoMsg widgetCmd)
+    unhandled ->
+      let
+        something = encode 0 unhandled
+        unhandled = Debug.log "-- unhandled" unhandled
+      in
+        (model, Cmd.none)
 
 view : Model -> Html Msg
 view model =
@@ -60,9 +72,4 @@ newTodoFrom text =
   AddTodo {text = text, completed = False}
 
 renderTodo : Todo.Model -> Html Msg
-renderTodo todo =
-  li []
-    [ input [type' "checkbox", checked todo.completed, onCheck (TodoCompleted todo)] []
-    , span [] [text todo.text]
-    , span [] [text (if todo.completed then "✓" else "✖️")]
-    ]
+renderTodo = App.map TodoMsg << Todo.view
