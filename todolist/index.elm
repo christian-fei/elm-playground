@@ -45,16 +45,12 @@ update msg model =
       ({model | todos = (addTodo todo model.todos)}, Cmd.none)
     TodoCompleted todo completed ->
       (model, Cmd.none)
-    TodoMsg subMsg ->
-      case subMsg of
-        _ ->
-          (model, Cmd.none)
-      --let
-      --  a = 1
-      --  --(todos, todoCmd) =
-      --  --  List.map (Todo.update subMsg) model.todos
-      --in
-      --  (model, Cmd.none) -- Cmd.map TodoMsg todoCmd)
+    --TodoMsg subMsg ->
+    --  let
+    --    (todos, todoCmd) =
+    --      List.map (Todo.update subMsg) model.todos
+    --  in
+    --    (model, Cmd.none) -- Cmd.map TodoMsg todoCmd)
     unhandled ->
       let
         something = encode 0 unhandled

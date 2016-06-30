@@ -15,13 +15,11 @@ type alias Model =
 update : Msg -> Model -> (Model, Cmd Msg)
 update msg model =
   case msg of
-    _ ->
-      (model, Cmd.none)
-    --TodoCompleted todo completed ->
-    --  let
-    --    _ = Debug.log "" msg
-    --  in
-    --    ({model | completed = completed}, Cmd.none)
+    TodoCompleted todo completed ->
+      if model.id == todo.id then
+        ({model | completed = completed}, Cmd.none)
+      else
+        (model, Cmd.none)
 
 view : Model -> Html Msg
 view todo =
