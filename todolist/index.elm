@@ -30,7 +30,7 @@ type Msg =
 
 init : (Model, Cmd Msg)
 init =
-  (Model [{text = "ciao", completed = False}] "", Cmd.none)
+  (Model [{id = 0, text = "ciao", completed = False}] "", Cmd.none)
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
@@ -68,11 +68,11 @@ view model =
     [ h1 [] [text "Todolist"]
     , ul [] (List.map renderTodo model.todos)
     , input [onInput TodoInputChanged] []
-    , button [disabled (alreadyPresentTodo model.todoInput model.todos), onClick (newTodoFrom model.todoInput)] [text "Add todo"]]
+    , button [disabled (alreadyPresentTodo model.todoInput model.todos), onClick (newTodoFrom model.todoInput model.todos)] [text "Add todo"]]
 
-newTodoFrom : String -> Msg
-newTodoFrom text =
-  AddTodo {text = text, completed = False}
+newTodoFrom : String -> List Todo.Model -> Msg
+newTodoFrom text todos =
+  AddTodo {id = (List.length todos), text = text, completed = False}
 
 renderTodo : Todo.Model -> Html Msg
 renderTodo = App.map TodoMsg << Todo.view
