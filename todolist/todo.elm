@@ -11,7 +11,7 @@ type alias Model =
   , completed : Bool
   }
 
-update : Msg -> List Model -> (List Model, Cmd Msg)
+update : Msg -> Model -> (Model, Cmd Msg)
 update msg model =
   case msg of
     _ ->
