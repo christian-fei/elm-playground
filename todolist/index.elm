@@ -25,8 +25,7 @@ type Msg =
   Noop
   | AddTodo Todo.Model
   | TodoInputChanged String
-  | TodoCompleted Todo.Model Bool
-  | TodoMsg Todo.Msg
+  | TodoMsg Int Todo.Msg
 
 init : (Model, Cmd Msg)
 init =
@@ -43,8 +42,6 @@ update msg model =
       ({model | todoInput = text}, Cmd.none)
     AddTodo todo ->
       ({model | todos = (addTodo todo model.todos)}, Cmd.none)
-    TodoCompleted todo completed ->
-      (model, Cmd.none)
     --TodoMsg subMsg ->
     --  let
     --    (todos, todoCmd) =
@@ -71,4 +68,6 @@ newTodoFrom text todos =
   AddTodo {id = (List.length todos), text = text, completed = False}
 
 renderTodo : Todo.Model -> Html Msg
-renderTodo = App.map TodoMsg << Todo.view
+renderTodo model = li [] [text "[todo placeholder]"]
+--renderTodo : Todo.Model -> Html (Todo.Msg -> Main.Msg)
+--renderTodo = App.map TodoMsg << Todo.view
