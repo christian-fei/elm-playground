@@ -25,7 +25,7 @@ type Msg =
   Noop
   | AddTodo Todo.Model
   | TodoInputChanged String
-  | TodoMsg Int Todo.Msg
+  | TodoMsg Todo.Msg
 
 init : (Model, Cmd Msg)
 init =
@@ -68,6 +68,4 @@ newTodoFrom text todos =
   AddTodo {id = (List.length todos), text = text, completed = False}
 
 renderTodo : Todo.Model -> Html Msg
-renderTodo model = li [] [text "[todo placeholder]"]
---renderTodo : Todo.Model -> Html (Todo.Msg -> Main.Msg)
---renderTodo = App.map TodoMsg << Todo.view
+renderTodo = App.map TodoMsg << Todo.view
