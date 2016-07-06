@@ -42,15 +42,18 @@ update msg model =
       ({model | todos = (addTodo todo model.todos)}, Cmd.none)
     TodoMsg todoId subMsg ->
       let
-        todos = List.map (\todo ->
-          if todo.id == todoId then
-            Todo.update subMsg todo
-            |> first
-          else
-            todo
-        ) model.todos
+        todos = List.map (todoFrom subMsg todoId) model.todos
       in
         ({model | todos = todos}, Cmd.none)
+
+todoFrom : Todo.Msg -> Int -> Todo.Model -> Todo.Model
+todoFrom subMsg todoId todo =
+  if todo.id == todoId then
+    Todo.update subMsg todo
+    |> first
+  else
+    todo
+
 
 view : Model -> Html Msg
 view model =
