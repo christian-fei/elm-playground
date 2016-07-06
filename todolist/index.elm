@@ -39,7 +39,10 @@ update msg model =
     TodoInputChanged text ->
       ({model | todoInput = text}, Cmd.none)
     AddTodo todo ->
-      ({model | todos = (addTodo todo model.todos)}, Cmd.none)
+      let
+        todos = addTodo todo model.todos
+      in
+        ({model | todos = todos}, Cmd.none)
     TodoMsg todoId subMsg ->
       let
         todos = List.map (todoFrom subMsg todoId) model.todos
