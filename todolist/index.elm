@@ -5,7 +5,6 @@ import Html.Attributes exposing (..)
 import List
 import Todo exposing (..)
 import TodoUtils exposing (..)
-import Json.Encode exposing (encode)
 
 main : Program Never
 main =
@@ -22,8 +21,7 @@ type alias Model =
   }
 
 type Msg =
-  Noop
-  | AddTodo Todo.Model
+  AddTodo Todo.Model
   | TodoInputChanged String
   | TodoMsg Int Todo.Msg
 
@@ -43,18 +41,16 @@ update msg model =
     AddTodo todo ->
       ({model | todos = (addTodo todo model.todos)}, Cmd.none)
     TodoMsg todoId subMsg ->
-      (model, Cmd.none)
-    --  let
-    --    (todos, todoCmd) =
-    --      List.map (Todo.update subMsg) model.todos
-    --  in
-    --    (model, Cmd.none) -- Cmd.map TodoMsg todoCmd)
-    unhandled ->
       let
-        something = encode 0 unhandled
-        unhandled = Debug.log "-- unhandled" unhandled
+        todos = List.map (\todo ->
+          if todo.id == todoId then
+            Todo.update subMsg todo
+            |> first
+          else
+            todo
+        ) model.todos
       in
-        (model, Cmd.none)
+        ({model | todos = todos}, Cmd.none)
 
 view : Model -> Html Msg
 view model =
@@ -71,3 +67,6 @@ newTodoFrom text todos =
 renderTodo : Todo.Model -> Html Msg
 renderTodo model =
   App.map (TodoMsg model.id) (Todo.view model)
+
+first : (a, b) -> a
+first (x,_) = x
