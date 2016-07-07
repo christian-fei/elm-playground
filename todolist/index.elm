@@ -52,7 +52,7 @@ view model =
     [ h1 [] [text "Todolist"]
     , ul [] (List.map renderTodo model.todos)
     , form [onSubmit (newTodoFrom model.todoInput model.todos)]
-      [ input [ onInput TodoInputChanged] []
+      [ input [onInput TodoInputChanged] []
       , button []
                [text "Add"]]]
 

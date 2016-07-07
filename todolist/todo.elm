@@ -4,7 +4,7 @@ import Html.Events exposing (..)
 import Html.Attributes exposing (..)
 
 type Msg =
-  TodoCompleted Model Bool
+  TodoCompleted Bool
 
 type alias Model =
   { id : Int
@@ -15,15 +15,12 @@ type alias Model =
 update : Msg -> Model -> (Model, Cmd Msg)
 update msg model =
   case msg of
-    TodoCompleted todo completed ->
-      if model.id == todo.id then
-        ({model | completed = completed}, Cmd.none)
-      else
-        (model, Cmd.none)
+    TodoCompleted completed ->
+      ({model | completed = completed}, Cmd.none)
 
 view : Model -> Html Msg
 view todo =
   li []
-    [ input [type' "checkbox", checked todo.completed, onCheck (TodoCompleted todo)] []
+    [ input [type' "checkbox", checked todo.completed, onCheck TodoCompleted] []
     , span [] [text todo.text]
     ]
