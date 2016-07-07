@@ -1,8 +1,8 @@
 import Html exposing (..)
 import Html.App as App
 import Html.Events exposing (..)
---import Html.Attributes exposing (..)
 import List
+import String
 import Todo exposing (..)
 
 main : Program Never
@@ -51,13 +51,14 @@ view model =
   main' []
     [ h1 [] [text "Todolist"]
     , ul [] (List.map renderTodo model.todos)
-    , input [onInput TodoInputChanged] []
-    , button [onClick (newTodoFrom model.todoInput model.todos)]
-             [text "Add todo"]]
+    , form [onSubmit (newTodoFrom model.todoInput model.todos)]
+      [ input [ onInput TodoInputChanged] []
+      , button []
+               [text "Add"]]]
 
 newTodoFrom : String -> List Todo.Model -> Msg
 newTodoFrom text todos =
-  AddTodo {id = (List.length todos), text = text, completed = False}
+  AddTodo {id = (List.length todos), text = (String.trim text), completed = False}
 
 mapTodoFrom : Todo.Msg -> Int -> Todo.Model -> Todo.Model
 mapTodoFrom subMsg todoId todo =
