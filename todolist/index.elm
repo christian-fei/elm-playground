@@ -1,10 +1,9 @@
 import Html exposing (..)
 import Html.App as App
 import Html.Events exposing (..)
-import Html.Attributes exposing (..)
+--import Html.Attributes exposing (..)
 import List
 import Todo exposing (..)
-import TodoUtils exposing (..)
 
 main : Program Never
 main =
@@ -39,23 +38,12 @@ update msg model =
     TodoInputChanged text ->
       ({model | todoInput = text}, Cmd.none)
     AddTodo todo ->
-      let
-        todos = addTodo todo model.todos
-      in
-        ({model | todos = todos}, Cmd.none)
+      ({model | todos = model.todos ++ [todo]}, Cmd.none)
     TodoMsg todoId subMsg ->
       let
-        todos = List.map (todoFrom subMsg todoId) model.todos
+        todos = List.map (mapTodoFrom subMsg todoId) model.todos
       in
         ({model | todos = todos}, Cmd.none)
-
-todoFrom : Todo.Msg -> Int -> Todo.Model -> Todo.Model
-todoFrom subMsg todoId todo =
-  if todo.id == todoId then
-    Todo.update subMsg todo
-    |> first
-  else
-    todo
 
 
 view : Model -> Html Msg
@@ -64,11 +52,21 @@ view model =
     [ h1 [] [text "Todolist"]
     , ul [] (List.map renderTodo model.todos)
     , input [onInput TodoInputChanged] []
-    , button [disabled (alreadyPresentTodo model.todoInput model.todos), onClick (newTodoFrom model.todoInput model.todos)] [text "Add todo"]]
+    , button [onClick (newTodoFrom model.todoInput model.todos)]
+             [text "Add todo"]]
 
 newTodoFrom : String -> List Todo.Model -> Msg
 newTodoFrom text todos =
   AddTodo {id = (List.length todos), text = text, completed = False}
+
+mapTodoFrom : Todo.Msg -> Int -> Todo.Model -> Todo.Model
+mapTodoFrom subMsg todoId todo =
+  if todo.id == todoId then
+    Todo.update subMsg todo
+    |> first
+  else
+    todo
+
 
 renderTodo : Todo.Model -> Html Msg
 renderTodo model =
