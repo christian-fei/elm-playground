@@ -11,14 +11,16 @@ main =
     , update = update}
 
 
-type alias Model = {}
+type alias Model =
+  { timestamp : Maybe Int
+  }
 
 type Msg =
   Noop
 
 init : (Model, Cmd Msg)
 init =
-  (Model, Cmd.none)
+  (Model Maybe.Nothing, Cmd.none)
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
@@ -26,7 +28,11 @@ subscriptions model =
 
 view : Model -> Html Msg
 view model =
-  text "Hello"
+  case model.timestamp of
+    Maybe.Nothing ->
+      text "No current time"
+    Just timestamp ->
+      text ("Hello" ++ (toString timestamp))
 
 update : Msg -> Model -> (Model, Cmd Msg)
 update msg model =
