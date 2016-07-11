@@ -1,5 +1,6 @@
 import Html.App as App
 import Html exposing(..)
+import Time exposing (Time, second)
 
 
 main : Program Never
@@ -12,11 +13,12 @@ main =
 
 
 type alias Model =
-  { timestamp : Maybe Int
+  { timestamp : Maybe Float
   }
 
 type Msg =
   Noop
+  | ReadTimestamp Time
 
 init : (Model, Cmd Msg)
 init =
@@ -24,7 +26,7 @@ init =
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
-  Sub.none
+  Time.every second ReadTimestamp
 
 view : Model -> Html Msg
 view model =
@@ -32,8 +34,13 @@ view model =
     Maybe.Nothing ->
       text "No current time"
     Just timestamp ->
-      text ("Hello" ++ (toString timestamp))
+      text ("Current time: " ++ (toString timestamp))
 
 update : Msg -> Model -> (Model, Cmd Msg)
 update msg model =
-  (model, Cmd.none)
+  case msg of
+    Noop ->
+      (model, Cmd.none)
+    ReadTimestamp currentTime ->
+      ({model | timestamp = Just currentTime}, Cmd.none)
+
