@@ -1,5 +1,6 @@
 import Html exposing (..)
 import Html.App as App
+import TimeTravel.Html.App as TimeTravel
 import Html.Events exposing (..)
 import List
 import String
@@ -7,7 +8,7 @@ import Todo exposing (..)
 
 main : Program Never
 main =
-  App.program
+  TimeTravel.program
   { init = init
   , subscriptions = subscriptions
   , update = update
