@@ -1,6 +1,7 @@
 import Html exposing (..)
 import Html.App as App
 import TimeTravel.Html.App as TimeTravel
+import Html.Attributes exposing(value)
 import Html.Events exposing (..)
 import List
 import String
@@ -39,7 +40,7 @@ update msg model =
     TodoInputChanged text ->
       ({model | todoInput = text}, Cmd.none)
     AddTodo todo ->
-      ({model | todos = model.todos ++ [todo]}, Cmd.none)
+      ({model | todos = (todo :: model.todos), todoInput = ""}, Cmd.none)
     TodoMsg todoId subMsg ->
       let
         todos = List.map (mapTodoFrom subMsg todoId) model.todos
@@ -53,7 +54,7 @@ view model =
     [ h1 [] [text "Todolist"]
     , ul [] (List.map renderTodo model.todos)
     , form [onSubmit (newTodoFrom model.todoInput model.todos)]
-      [ input [onInput TodoInputChanged] []
+      [ input [value model.todoInput, onInput TodoInputChanged] []
       , button []
                [text "Add"]]]
 
