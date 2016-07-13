@@ -6,6 +6,7 @@ import Html.Events exposing (..)
 import List
 import String
 import Todo exposing (..)
+import TodoVisibilityBar exposing (..)
 
 main : Program Never
 main =
@@ -19,16 +20,18 @@ main =
 type alias Model =
   { todos : List Todo.Model
   , todoInput : String
+  , visibility : TodoVisibilityBar.Model
   }
 
 type Msg =
   AddTodo Todo.Model
   | TodoInputChanged String
   | TodoMsg Int Todo.Msg
+  | TodoVisibilityBarMsg TodoVisibilityBar.Msg
 
 init : (Model, Cmd Msg)
 init =
-  (Model [{id = 0, text = "ciao", completed = False}] "", Cmd.none)
+  (Model [{id = 0, text = "ciao", completed = False}] "" All, Cmd.none)
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
@@ -56,7 +59,9 @@ view model =
     , form [onSubmit (newTodoFrom model.todoInput model.todos)]
       [ input [value model.todoInput, onInput TodoInputChanged] []
       , button []
-               [text "Add"]]]
+               [text "Add"]]
+      , App.map TodoVisibilityBarMsg (TodoVisibilityBar.view model.visibility)
+    ]
 
 newTodoFrom : String -> List Todo.Model -> Msg
 newTodoFrom text todos =
