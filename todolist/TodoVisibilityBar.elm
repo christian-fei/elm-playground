@@ -18,11 +18,14 @@ init = All
 
 view : Model -> Html Msg
 view model =
-  ul [] (List.map (\(visibilityMsg, displayText) ->
-            li [onClick visibilityMsg] [text displayText]
-          )
-          [(All, "All"), (Uncompleted, "Uncompleted"), (Completed, "Completed")]
-        )
+  ul [] viewVisibilityOptions
+
+viewVisibilityOptions : List (Html Msg)
+viewVisibilityOptions =
+  List.map
+    (\(visibilityMsg, displayText) -> li [onClick visibilityMsg] [text displayText])
+    [(All, "All"), (Uncompleted, "Uncompleted"), (Completed, "Completed")]
+
 
 filter : Bool -> Msg -> Bool
 filter completed msg =
