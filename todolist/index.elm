@@ -70,13 +70,7 @@ view model =
 
 filterVisibility : TodoVisibilityBar.Model -> List Todo.Model -> List Todo.Model
 filterVisibility visibility todos =
-  List.filter (\t ->
-      case visibility of
-        "All"         -> True
-        "Completed"   -> t.completed
-        "Uncompleted" -> not t.completed
-        _             -> t.completed
-  ) todos
+  List.filter (\t -> TodoVisibilityBar.filter t.completed visibility) todos
 
 newTodoFrom : String -> List Todo.Model -> Msg
 newTodoFrom text todos =

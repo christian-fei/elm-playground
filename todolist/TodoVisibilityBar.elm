@@ -1,4 +1,4 @@
-module TodoVisibilityBar exposing (Model, Msg, update, view, init)
+module TodoVisibilityBar exposing (Model, Msg, update, view, init, filter)
 import Html exposing (..)
 import Html.Events exposing(onClick)
 
@@ -7,18 +7,14 @@ type Msg =
   | Uncompleted
   | Completed
 
-type alias Model = String
+type alias Model = Msg
 
 update : Msg -> Model -> (Model, Cmd Msg)
 update msg model =
-  case msg of
-    All           -> ("All", Cmd.none)
-    Completed     -> ("Completed", Cmd.none)
-    Uncompleted   -> ("Uncompleted", Cmd.none)
+  (msg, Cmd.none)
 
 init : Model
-init = "All"
-
+init = All
 
 view : Model -> Html Msg
 view model =
@@ -27,3 +23,10 @@ view model =
           )
           [(All, "All"), (Uncompleted, "Uncompleted"), (Completed, "Completed")]
         )
+
+filter : Bool -> Msg -> Bool
+filter completed msg =
+  case msg of
+    All          -> True
+    Completed    -> completed
+    Uncompleted  -> not completed
