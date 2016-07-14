@@ -31,7 +31,7 @@ type Msg =
 
 init : (Model, Cmd Msg)
 init =
-  (Model [{id = 0, text = "ciao", completed = False}] "" All, Cmd.none)
+  (Model [{id = 0, text = "ciao", completed = False}, {id = 1, text = "another one", completed = True}] "" TodoVisibilityBar.init, Cmd.none)
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
@@ -49,19 +49,34 @@ update msg model =
         todos = List.map (mapTodoFrom subMsg todoId) model.todos
       in
         ({model | todos = todos}, Cmd.none)
+    TodoVisibilityBarMsg subMsg ->
+      let
+        visibility = TodoVisibilityBar.update subMsg model.visibility |> first
+      in
+        ({model | visibility = visibility}, Cmd.none)
 
 
 view : Model -> Html Msg
 view model =
   main' []
     [ h1 [] [text "Todolist"]
-    , ul [] (List.map renderTodo model.todos)
+    , ul [] (List.map renderTodo (filterVisibility model.visibility model.todos))
     , form [onSubmit (newTodoFrom model.todoInput model.todos)]
       [ input [value model.todoInput, onInput TodoInputChanged] []
       , button []
                [text "Add"]]
       , App.map TodoVisibilityBarMsg (TodoVisibilityBar.view model.visibility)
     ]
+
+filterVisibility : TodoVisibilityBar.Model -> List Todo.Model -> List Todo.Model
+filterVisibility visibility todos =
+  List.filter (\t ->
+      case visibility of
+        "All"         -> True
+        "Completed"   -> t.completed
+        "Uncompleted" -> not t.completed
+        _             -> t.completed
+  ) todos
 
 newTodoFrom : String -> List Todo.Model -> Msg
 newTodoFrom text todos =
