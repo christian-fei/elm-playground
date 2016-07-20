@@ -31,7 +31,7 @@ type Msg =
 
 init : (Model, Cmd Msg)
 init =
-  (Model [{id = 0, text = "ciao", completed = False}, {id = 1, text = "another one", completed = True}] "" TodoVisibilityBar.init, Cmd.none)
+  (Model [] "" TodoVisibilityBar.init, Cmd.none)
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
