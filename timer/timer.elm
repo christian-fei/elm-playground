@@ -34,6 +34,13 @@ update : Msg -> Model -> (Model, Cmd Msg)
 update msg model =
   case msg of
     StartTimer time ->
-      (time, Cmd.none)
+      (handleStartTime time model, Cmd.none)
     _               ->
       (model, Cmd.none)
+
+handleStartTime time model =
+  if time < 0
+  then
+    model
+  else
+    time

@@ -7293,11 +7293,19 @@ var _elm_lang$html$Html_App$beginnerProgram = function (_p1) {
 };
 var _elm_lang$html$Html_App$map = _elm_lang$virtual_dom$VirtualDom$map;
 
+var _user$project$Timer$handleStartTime = F2(
+	function (time, model) {
+		return (_elm_lang$core$Native_Utils.cmp(time, 0) < 0) ? model : time;
+	});
 var _user$project$Timer$update = F2(
 	function (msg, model) {
 		var _p0 = msg;
 		if (_p0.ctor === 'StartTimer') {
-			return {ctor: '_Tuple2', _0: _p0._0, _1: _elm_lang$core$Platform_Cmd$none};
+			return {
+				ctor: '_Tuple2',
+				_0: A2(_user$project$Timer$handleStartTime, _p0._0, model),
+				_1: _elm_lang$core$Platform_Cmd$none
+			};
 		} else {
 			return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
 		}
