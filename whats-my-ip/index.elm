@@ -23,11 +23,11 @@ type alias Model =
 
 type Msg =
   DoNothing
-  | RequestIP
-  | UpdateIP (Maybe String)
+  | RequestIPSuccess (String)
+  | RequestIPFail Http.Error
 
 init : (Model, Cmd Msg)
-init = (Model "Unknown IP", Cmd.none)
+init = (Model "Unknown IP", requestIp)
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
@@ -36,24 +36,22 @@ subscriptions model =
 update : Msg -> Model -> (Model, Cmd Msg)
 update action model =
   case action of
-    RequestIP -> (model, requestIp)
-    _         -> (model, Cmd.none)
+    RequestIPSuccess ip ->
+      ({model | ip = ip}, Cmd.none)
+    _                   -> (model, Cmd.none)
 
 view : Model -> Html Msg
-view model = text "42"
+view model = text model.ip
 
 
 ---
+jsonIpUrl : String
 jsonIpUrl = "http://jsonip.com"
 
 requestIp : Cmd Msg
 requestIp =
-  Task.map UpdateIP (Task.toMaybe (Http.get extractIpField "http://jsonip.com"))
-  --Http.get ("ip" := Json.string) "http://jsonip.com"
-  --  |> Task.toMaybe
-  --  |> Task.map UpdateIP
-  --  |> Task
+  Task.perform RequestIPFail RequestIPSuccess (Http.get decodeResponse "http://jsonip.com")
 
-extractIpField : Json.Decoder String
-extractIpField =
+decodeResponse : Json.Decoder String
+decodeResponse =
   Json.at ["ip"] Json.string
